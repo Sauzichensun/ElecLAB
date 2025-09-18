@@ -19,7 +19,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "fatfs.h"
-#include "stdio.h"
 #include "sdio.h"
 #include "usart.h"
 #include "gpio.h"
@@ -28,6 +27,7 @@
 /* USER CODE BEGIN Includes */
 
 #include "string.h"
+#include "stdio.h"
 
 /* USER CODE END Includes */
 
@@ -54,10 +54,14 @@
 
 /* USER CODE BEGIN PV */
 
-FATFS fs;            // File system object
-FIL file;           // File object
+extern uint8_t retSD;    /* Return value for SD */
+extern char SDPath[4];   /* SD logical drive path */
+extern FATFS SDFatFS;    /* File system object for SD logical drive */
+extern FIL SDFile;       /* File object for SD */
+
 UINT br,bw;       // File read/write count
 FRESULT res;      //return result
+char SDTxt[256];     //SD card text buffer
 
 /* USER CODE END PV */
 
@@ -65,14 +69,14 @@ FRESULT res;      //return result
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 
-//redirect C library printf function to USART3
+//redirect printf to USART3
 #if 1
-#if (__ARMCC_VERSION >= 6010050)                    /* Ê¹ÓÃAC6±àÒëÆ÷Ê± */
-__asm(".global __use_no_semihosting\n\t");          /* ÉùÃ÷²»Ê¹ÓÃ°ëÖ÷»úÄ£Ê½ */
-__asm(".global __ARM_use_no_argv \n\t");            /* AC6ÏÂÐèÒªÉùÃ÷mainº¯ÊýÎªÎÞ²ÎÊý¸ñÊ½£¬·ñÔò²¿·ÖÀý³Ì¿ÉÄÜ³öÏÖ°ëÖ÷»úÄ£Ê½ */
+#if (__ARMCC_VERSION >= 6010050)                    /* Ê¹ï¿½ï¿½AC6ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê± */
+__asm(".global __use_no_semihosting\n\t");          /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½ */
+__asm(".global __ARM_use_no_argv \n\t");            /* AC6ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½mainï¿½ï¿½ï¿½ï¿½Îªï¿½Þ²ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ò²¿·ï¿½ï¿½ï¿½ï¿½Ì¿ï¿½ï¿½Ü³ï¿½ï¿½Ö°ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½ */
 
 #else
-/* Ê¹ÓÃAC5±àÒëÆ÷Ê±, ÒªÔÚÕâÀï¶¨Òå__FILE ºÍ ²»Ê¹ÓÃ°ëÖ÷»úÄ£Ê½ */
+/* Ê¹ï¿½ï¿½AC5ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±, Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¶¨ï¿½ï¿½__FILE ï¿½ï¿½ ï¿½ï¿½Ê¹ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½ */
 #pragma import(__use_no_semihosting)
 
 struct __FILE
@@ -85,14 +89,14 @@ struct __FILE
 
 #endif
 
-/* ²»Ê¹ÓÃ°ëÖ÷»úÄ£Ê½£¬ÖÁÉÙÐèÒªÖØ¶¨Òå_ttywrch\_sys_exit\_sys_command_stringº¯Êý,ÒÔÍ¬Ê±¼æÈÝAC6ºÍAC5Ä£Ê½ */
+/* ï¿½ï¿½Ê¹ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ø¶ï¿½ï¿½ï¿½_ttywrch\_sys_exit\_sys_command_stringï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½Í¬Ê±ï¿½ï¿½ï¿½ï¿½AC6ï¿½ï¿½AC5Ä£Ê½ */
 int _ttywrch(int ch)
 {
     ch = ch;
     return ch;
 }
 
-/* ¶¨Òå_sys_exit()ÒÔ±ÜÃâÊ¹ÓÃ°ëÖ÷»úÄ£Ê½ */
+/* ï¿½ï¿½ï¿½ï¿½_sys_exit()ï¿½Ô±ï¿½ï¿½ï¿½Ê¹ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½ */
 void _sys_exit(int x)
 {
     x = x;
@@ -103,15 +107,15 @@ char *_sys_command_string(char *cmd, int len)
     return NULL;
 }
 
-/* FILE ÔÚ stdio.hÀïÃæ¶¨Òå. */
+/* FILE ï¿½ï¿½ stdio.hï¿½ï¿½ï¿½æ¶¨ï¿½ï¿½. */
 FILE __stdout;
 
-/* ÖØ¶¨Òåfputcº¯Êý, printfº¯Êý×îÖÕ»áÍ¨¹ýµ÷ÓÃfputcÊä³ö×Ö·û´®µ½´®¿Ú */
+/* ï¿½Ø¶ï¿½ï¿½ï¿½fputcï¿½ï¿½ï¿½ï¿½, printfï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ»ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½fputcï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿? */
 int fputc(int ch, FILE *f)
 {
-    while ((USART3->SR & 0X40) == 0);               /* µÈ´ýÉÏÒ»¸ö×Ö·û·¢ËÍÍê³É */
+    while ((USART3->SR & 0X40) == 0);               /* ï¿½È´ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿? */
 
-    USART3->DR = (uint8_t)ch;                       /* ½«Òª·¢ËÍµÄ×Ö·û ch Ð´Èëµ½DR¼Ä´æÆ÷ */
+    USART3->DR = (uint8_t)ch;                       /* ï¿½ï¿½Òªï¿½ï¿½ï¿½Íµï¿½ï¿½Ö·ï¿½ ch Ð´ï¿½ëµ½DRï¿½Ä´ï¿½ï¿½ï¿½ */
     return ch;
 }
 #endif
@@ -122,7 +126,6 @@ int fgetc(FILE *f)
   HAL_UART_Receive(&huart3,&ch,1,0xFFFF);
   return ch;
 }
-
 
 /* USER CODE END PFP */
 
@@ -165,38 +168,58 @@ int main(void)
   MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
 
-  //¹ÒÔØÎÄ¼þÏµÍ³
-  res = f_mount(&fs, "", 1);
-  if (res != FR_OK)
-  {
-    printf("¹ÒÔØÎÄ¼þÏµÍ³Ê§°Ü\r\n");
+  // Wait for SD card to be ready
+  HAL_Delay(200);
+  printf("Ready to mount the file\r\n");
+  //system
+  DSTATUS disk_stat = disk_initialize(0);  // 0Îª¾í±ê
+  if (disk_stat != 0) {
+    printf("disk_initialize failed! Status: %d\r\n", disk_stat);
+    // 0:³É¹¦£»1:Î´³õÊ¼»¯£»2:ÎÞ´ÅÅÌ£»3:Ð´±£»¤
     Error_Handler();
-  }
-
-  //´´½¨´ò¿ªÎÄ¼þ
-  res = f_open(&file, "SD1.txt", FA_CREATE_ALWAYS | FA_WRITE);
-  if (res == FR_OK)
-  {
-    char text[] = "Hello, this is a test file for SD card using FATFS.\r\n";
-    f_write(&file, text, strlen(text), &bw);
-    f_close(&file);
-    printf("ÎÄ¼þÐ´Èë³É¹¦\r\n");
-  }
-
-  //¶ÁÈ¡ÎÄ¼þÄÚÈÝ
-  res = f_open(&file, "SD1.txt", FA_READ);
-  if (res == FR_OK)
-  {
-    char text[64] = {0};
-    f_read(&file, text, 100, &br);
-    f_close(&file);
-    printf("ÎÄ¼þ¶ÁÈ¡³É¹¦\r\n");
-    printf("%s", text);
   }
   else
   {
-    printf("ÎÄ¼þ´ò¿ªÊ§°Ü\r\n");
+    printf("disk_initialize success!\r\n");
   }
+
+  res = f_mount(&SDFatFS, SDPath, 1);
+  if (res != FR_OK)
+  {
+    printf("Mount failed, res = %d\r\n", res);
+    if (res == FR_DISK_ERR) printf("Low-level disk I/O error\r\n");
+    if (res == FR_NOT_READY) printf("Disk not ready\r\n");
+    if (res == FR_NO_FILESYSTEM) printf("No valid FAT file system\r\n");
+  }
+  else
+  {
+    printf("File system mounted successfully\r\n");
+  }
+
+  // Open the file for reading
+  res = f_open(&SDFile, "first1.txt", FA_READ);
+  if (res == FR_OK)
+  {
+    f_read(&SDFile, SDTxt, 100, &br);
+    f_close(&SDFile);
+    printf("File read successfully\r\n");
+    printf("%s", SDTxt);
+  }
+  else
+  {
+    printf("Failed to open file for reading\r\n");
+  }
+
+    // Create and open a file for writing
+  res = f_open(&SDFile, "write1.txt", FA_CREATE_ALWAYS | FA_WRITE);
+  if (res == FR_OK)
+  {
+    char text[] = "Hello, this is a test file for SD card using FATFS.\r\n";
+    f_write(&SDFile, text, strlen(text), &bw);
+    f_close(&SDFile);
+    printf("File written successfully\r\n");
+  }
+
 
   /* USER CODE END 2 */
 
