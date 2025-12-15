@@ -1,0 +1,12 @@
+wie\generate.o: ..\nmea_decode\Src\generate.c
+wie\generate.o: ../nmea_decode/Inc/tok.h
+wie\generate.o: ../nmea_decode/Inc/config.h
+wie\generate.o: E:\AppData\KEIL\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
+wie\generate.o: ../nmea_decode/Inc/sentence.h
+wie\generate.o: ../nmea_decode/Inc/info.h
+wie\generate.o: ../nmea_decode/Inc/time.h
+wie\generate.o: ../nmea_decode/Inc/generate.h
+wie\generate.o: ../nmea_decode/Inc/units.h
+wie\generate.o: E:\AppData\KEIL\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+wie\generate.o: E:\AppData\KEIL\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+wie\generate.o: E:\AppData\KEIL\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

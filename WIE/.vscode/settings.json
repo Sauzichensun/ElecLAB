@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "usart.h": "c",
+        "main.h": "c",
+        "jiesuan.h": "c",
+        "tim.h": "c",
+        "stm32h7xx_hal_usart.h": "c",
+        "wie.h": "c",
+        "string.h": "c",
+        "cstdio": "c"
+    }
+}

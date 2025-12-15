@@ -1,0 +1,10 @@
+wie\tok.o: ..\nmea_decode\Src\tok.c
+wie\tok.o: ../nmea_decode/Inc/tok.h
+wie\tok.o: ../nmea_decode/Inc/config.h
+wie\tok.o: E:\AppData\KEIL\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
+wie\tok.o: E:\AppData\KEIL\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+wie\tok.o: E:\AppData\KEIL\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+wie\tok.o: E:\AppData\KEIL\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+wie\tok.o: E:\AppData\KEIL\Keil_v5\ARM\ARMCC\Bin\..\include\ctype.h
+wie\tok.o: E:\AppData\KEIL\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+wie\tok.o: E:\AppData\KEIL\Keil_v5\ARM\ARMCC\Bin\..\include\limits.h

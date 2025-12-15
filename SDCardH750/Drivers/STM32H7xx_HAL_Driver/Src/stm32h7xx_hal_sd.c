@@ -342,6 +342,7 @@ HAL_StatusTypeDef HAL_SD_Init(SD_HandleTypeDef *hsd)
   uint32_t unitsize;
   uint32_t tickstart;
 
+
   /* Check the SD handle allocation */
   if (hsd == NULL)
   {

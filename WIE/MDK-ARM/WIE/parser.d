@@ -1,0 +1,12 @@
+wie\parser.o: ..\nmea_decode\Src\parser.c
+wie\parser.o: ../nmea_decode/Inc/tok.h
+wie\parser.o: ../nmea_decode/Inc/config.h
+wie\parser.o: E:\AppData\KEIL\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
+wie\parser.o: ../nmea_decode/Inc/parse.h
+wie\parser.o: ../nmea_decode/Inc/sentence.h
+wie\parser.o: ../nmea_decode/Inc/info.h
+wie\parser.o: ../nmea_decode/Inc/time.h
+wie\parser.o: ../nmea_decode/Inc/parser.h
+wie\parser.o: ../nmea_decode/Inc/context.h
+wie\parser.o: E:\AppData\KEIL\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+wie\parser.o: E:\AppData\KEIL\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
