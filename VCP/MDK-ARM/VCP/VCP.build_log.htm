@@ -1,0 +1,73 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.41.0.0
+Copyright (C) 2024 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: 11 s19201080165@outlook.com, 11, LIC=8VRJ7-EHEDM-128LE-51BF8-XGR9G-2I77Y
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Plus  Version: 5.41.0.0
+Toolchain Path:  E:\AppData\KEIL\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 7 (build 960)
+Assembler:       Armasm.exe V5.06 update 7 (build 960)
+Linker/Locator:  ArmLink.exe V5.06 update 7 (build 960)
+Library Manager: ArmAr.exe V5.06 update 7 (build 960)
+Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
+CPU DLL:         SARMCM3.DLL V5.41.0.0
+Dialog DLL:      DCM.DLL V1.17.5.0
+Target DLL:      CMSIS_AGDI.dll V1.33.21.0
+Dialog DLL:      TCM.DLL V1.56.4.0
+ 
+<h2>Project:</h2>
+C:\Users\s1920\Desktop\ElecLAB\VCP\MDK-ARM\VCP.uvprojx
+Project File Date:  12/12/2025
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'E:\AppData\KEIL\Keil_v5\ARM\ARMCC\Bin'
+Build target 'VCP'
+compiling main.c...
+../Core/Src/main.c(83): warning:  #223-D: function "SCB_EnableICache" declared implicitly
+  	  SCB_EnableICache();
+../Core/Src/main.c(85): warning:  #223-D: function "SCB_EnableDCache" declared implicitly
+  		SCB_EnableDCache();
+../Core/Src/main.c(138): warning:  #69-D: integer conversion resulted in truncation
+          JustFloatVofa_setData(&adc_frame, adc_frame.fdata, ADC_DATA_SIZE / 2);
+../Core/Src/main.c(148): warning:  #69-D: integer conversion resulted in truncation
+          JustFloatVofa_setData(&adc_frame, &adc_frame.fdata[ADC_DATA_SIZE / 2], ADC_DATA_SIZE / 2);
+../Core/Src/main.c: 4 warnings, 0 errors
+linking...
+VCP\VCP.axf: Error: L6218E: Undefined symbol SCB_EnableDCache (referred from main.o).
+VCP\VCP.axf: Error: L6218E: Undefined symbol SCB_EnableICache (referred from main.o).
+Not enough information to list image symbols.
+Not enough information to list load addresses in the image map.
+Finished: 2 information, 0 warning and 2 error messages.
+"VCP\VCP.axf" - 2 Error(s), 4 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                https://www.keil.com/pack/ARM.CMSIS.6.2.0.pack
+                ARM::CMSIS@6.2.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 6.1.1
+
+Package Vendor: Keil
+                https://www.keil.com/pack/Keil.STM32F4xx_DFP.3.1.1.pack
+                Keil::STM32F4xx_DFP@3.1.1
+                STMicroelectronics STM32F4 Series Device Support
+
+<h2>Collection of Component include folders:</h2>
+  ./RTE/_VCP
+  E:/AppData/KEIL/Arm/Packs/ARM/CMSIS/6.2.0/CMSIS/Core/Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE@6.1.1
+      Include file:  CMSIS/Core/Include/tz_context.h
+Target not created.
+Build Time Elapsed:  00:00:03
+</pre>
+</body>
+</html>

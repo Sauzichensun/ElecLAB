@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "main.h": "c",
+        "stm32f4xx_hal.h": "c",
+        "stm32f4xx.h": "c",
+        "string.h": "c",
+        "myusb.h": "c",
+        "tim.h": "c",
+        "mytime.h": "c",
+        "usbd_cdc_if.h": "c"
+    }
+}
